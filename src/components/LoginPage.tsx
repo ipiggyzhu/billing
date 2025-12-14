@@ -82,7 +82,8 @@ export function LoginPage() {
                                         onChange={(e) => setUsername(e.target.value)}
                                         className="pl-9"
                                         required
-                                        minLength={3}
+                                        minLength={2}
+                                        maxLength={10}
                                     />
                                 </div>
                             )}
