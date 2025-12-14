@@ -3,13 +3,14 @@ import { useAuthStore } from "../stores/use-auth"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
-import { Lock, Mail } from "lucide-react"
+import { Lock, Mail, User } from "lucide-react"
 
 export function LoginPage() {
     const { login, register, resetPassword } = useAuthStore()
     const [view, setView] = useState<'login' | 'register' | 'forgot'>('login')
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [username, setUsername] = useState("")
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [successMsg, setSuccessMsg] = useState<string | null>(null)
@@ -27,7 +28,7 @@ export function LoginPage() {
                 setLoading(false)
             }
         } else if (view === 'register') {
-            const { error: authError } = await register(email, password)
+            const { error: authError } = await register(email, password, username)
             if (authError) {
                 setError(authError.message || "Registration failed")
                 setLoading(false)
@@ -36,6 +37,7 @@ export function LoginPage() {
                 setView('login')
                 setLoading(false)
                 setPassword("")
+                setUsername("")
             }
         } else if (view === 'forgot') {
             const { error: authError } = await resetPassword(email)
@@ -70,6 +72,20 @@ export function LoginPage() {
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
+                            {view === 'register' && (
+                                <div className="relative">
+                                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                    <Input
+                                        type="text"
+                                        placeholder="Username"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        className="pl-9"
+                                        required
+                                        minLength={3}
+                                    />
+                                </div>
+                            )}
                             <div className="relative">
                                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                                 <Input
